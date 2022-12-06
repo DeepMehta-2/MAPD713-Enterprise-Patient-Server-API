@@ -42,7 +42,7 @@ var patientsSchema = new mongoose.Schema({
 // This is the schema.  Note the types, validation and trim
 // statements.  They enforce useful constraints on the data.
 var patientsSchemaTest = new mongoose.Schema({
-  patientId: String,
+  patient_id: String,
   nurse_name: String,
   date: String,
   time: String,
