@@ -1,8 +1,7 @@
 var SERVER_NAME = 'patient-api'
-// var PORT = 8000;
-var HOST = '192.168.2.69';
-
-var port = process.env.PORT;
+var PORT = process.env.PORT ||8000;
+var HOST = '127.0.0.1';
+// var HOST = '192.168.2.69';
 
 var mongoose = require('mongoose');
 var http = require ('http');
@@ -71,7 +70,7 @@ var restify = require('restify')
   // Create the restify server
   server = restify.createServer({name: SERVER_NAME})
 
-  server.listen(port, HOST, function () {
+  server.listen(PORT, HOST, function () {
   console.log('Server %s listening at %s', server.name, server.url)
   console.log('Resources:')
   console.log(' /patients')
