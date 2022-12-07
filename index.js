@@ -1,7 +1,7 @@
 var SERVER_NAME = 'patient-api'
 var PORT = process.env.PORT ||8000;
-var HOST = '127.0.0.1';
-// var HOST = '192.168.2.69';
+// var HOST = '127.0.0.1';
+var HOST = '192.168.2.69';
 
 var mongoose = require('mongoose');
 var http = require ('http');
@@ -33,7 +33,8 @@ var patientsSchema = new mongoose.Schema({
   gender: String,
   contact_no: String,
   doctor: String,
-  department: String
+  department: String,
+  critical_condition: Boolean
 },
 {
   timestamps: true,
@@ -161,7 +162,8 @@ server.post('/patients', function (req, res, next) {
     gender: req.params.gender,
     contact_no: req.params.contact_no,
     department: req.params.department,
-    doctor: req.params.doctor
+    doctor: req.params.doctor,
+    critical_condition: false
 	}
 
   // Create the user using the persistence engine
@@ -182,17 +184,18 @@ server.put('/patients/:id', function (req, res, next) {
   console.log("patients Put : received request")
   
   var updatePatient = {
-    patient_name: req.params.patient_name, 
-    address: req.params.address,
-    age: req.params.age,
-    gender: req.params.gender,
-    contact_no: req.params.contact_no,
-    department: req.params.department,
-    doctor: req.params.doctor
+    critical_condition: req.params.critical_condition, 
+    // _id: req.params._id
+    // address: req.params.address,
+    // age: req.params.age,
+    // gender: req.params.gender,
+    // contact_no: req.params.contact_no,
+    // department: req.params.department,
+    // doctor: req.params.doctor
 	}
   
   // Update the user with the persistence engine
-  Patients.update(updatePatient, function (error, patients) {
+  Patients.update({_id: req.params._id},updatePatient, function (error, patients) {
 
     // If there are any errors, pass them to next in the correct format
     if (error) return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))
@@ -266,9 +269,34 @@ server.post('/patients/:id/tests', function (req, res, next) {
 
     console.log("patients Post : store patients successfully")
 
+    var updatePatient = {
+      critical_condition: req.params.critical_condition, 
+      // _id: req.params._id
+      // address: req.params.address,
+      // age: req.params.age,
+      // gender: req.params.gender,
+      // contact_no: req.params.contact_no,
+      // department: req.params.department,
+      // doctor: req.params.doctor
+    }
+    
+    // Update the user with the persistence engine
+    Patients.update({_id: req.params.patient_id},updatePatient, function (error, patients) {
+  
+      // If there are any errors, pass them to next in the correct format
+      if (error) return next(new restify.InvalidArgumentError(JSON.stringify(error.errors)))
+  
+      console.log("patients Put : Update patients successfully")
+  
+      // Send a 200 OK response
+      // res.send(200)
+    })
+
     // Send the user if no issues
-    res.send(201, patients)
+    res.send(200, patients)
   })
+
+  
 })
 
 // Get all patients in the system
